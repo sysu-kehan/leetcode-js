@@ -57,38 +57,15 @@ function generateTree(array) {
 	}
 	var nodes = [];
 	for (var i = 0; i < array.length; i++) {
-		nodes[i] = array[i] === null ? null : new TreeNode(array[i]);
+		nodes[i + 1] = array[i] === null ? null : new TreeNode(array[i]);
 	}
-	//  计算树一共有几层
-	var totalLevel = 0;
-	for (var sum = 1; array.length > sum; totalLevel++, sum += Math.pow(2, totalLevel));
-	var levels = [];
-	levels[0] = 1;
-	for (var i = 1; i <= totalLevel; i++) {
-		levels[i] = Math.pow(2, i) + levels[i - 1];
-	}
-	//  构造根节点
-	var root = nodes[0];
-	var rootLeftChildIndex = 1;
-	var rootRightChildIndex = rootLeftChildIndex + 1;
-	root.left = rootLeftChildIndex < nodes.length ? nodes[rootLeftChildIndex] : null;
-	root.right = rootRightChildIndex < nodes.length ? nodes[rootRightChildIndex] : null;
-
-	var curLevel = 1;
-	for (var i = 1; i < nodes.length; i++) {
-		if (i + 1 > levels[curLevel]) {
-			curLevel++;
-		}
-		if (nodes[i] !== null && curLevel < totalLevel) {
-			var curPos = i - levels[curLevel - 1];
-			var childPos = curPos * 2;
-			var leftChildIndex = levels[curLevel] + childPos;
-			var rightChildIndex = leftChildIndex + 1;
-			nodes[i].left = leftChildIndex < nodes.length ? nodes[leftChildIndex] : null;
-			nodes[i].right = rightChildIndex < nodes.length ? nodes[rightChildIndex] : null;
+	for (var i = 1; i * 2 < nodes.length; i++) {
+		if (nodes[i] !== null) {
+			nodes[i].left = nodes[i * 2];
+			nodes[i].right = i * 2 + 1 < nodes.length ? nodes[i * 2 + 1] : null;
 		}
 	}
-	return root;
+	return nodes[1];
 }
 
 module.exports = {
